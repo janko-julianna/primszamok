@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: primszam-container
-          image: ghcr.io/janko-julianna/primszamok:latest
+          image: ghcr.io/janko-julianna/primszamok:1776966995
           ports:
             - containerPort: 80
       imagePullSecrets:
