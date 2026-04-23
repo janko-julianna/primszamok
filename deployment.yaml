@@ -3,22 +3,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: primszam 
+  name: primszamok
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: primszam
+      app: primszamok
 
   template:
     metadata:
       labels:
-        app: primszam
+        app: primszamok
 
     spec:
       containers:
         - name: primszam-container
-          image: ghcr.io/janko-julianna/primszam:latest
+          image: ghcr.io/janko-julianna/primszamok:latest
           ports:
             - containerPort: 80
       imagePullSecrets:
@@ -29,11 +29,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: primszam-clusterip
+  name: primszamok-clusterip
 spec:
   type: ClusterIP
   selector:
-    app: primszam
+    app: primszamok
   ports: 
     - protocol: TCP
       port: 80
@@ -44,7 +44,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: primszam-ingress
+  name: primszamok-ingress
   annotations:
     # nginx.ingress.kubernetes.io/whitelist-source-range: 10.0.32.0/24, 193.225.219.140/32 
     # nginx.ingress.kubernetes.io/ssl-redirect: 'true'
@@ -52,13 +52,13 @@ spec:
   ingressClassName: nginx 
 
   rules:
-    - host: primszam-janko-julianna.jcloud.jedlik.cloud
+    - host: primszamok-janko-julianna.jcloud.jedlik.cloud
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: primszam-clusterip
+                name: primszamok-clusterip
                 port:
                   number: 80  
