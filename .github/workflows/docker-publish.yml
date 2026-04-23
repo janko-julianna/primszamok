@@ -27,7 +27,7 @@ jobs:
     - name: Build the Docker image
       run: |
         docker build . --file Dockerfile --tag ghcr.io/janko-julianna/primszam:$IMAGE_TAG        
-        docker login ghcr.io -u janko-julianna -p ${{ secrets.JEDLIK_K8S_CONFIG }}
+        docker login ghcr.io -u janko-julianna -p ${{ secrets.GHCR_PAT }}
         docker push ghcr.io/janko-julianna/primszam:$IMAGE_TAG
 
         sed -i 's|image: ghcr.io/janko-julianna/primszam:.*|image: ghcr.io/janko-julianna/primszam:'"$IMAGE_TAG"'|' deployment.yaml
