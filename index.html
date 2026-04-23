@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prímszám Ellenőrző</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #primeBackground {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 0;
+        }
+
+        body > * {
+            position: relative;
+            z-index: 10;
+        }
+
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+
+        .result.prime {
+            background-color: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .result.not-prime {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        .result.error {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 2px solid #ffeaa7;
+        }
+
+        .result-text {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div id="primeBackground"></div>
+    <div class="container">
+        <h1>Prímszám Ellenőrző</h1>
+        
+        <div class="input-group">
+            <label for="number">Adj meg egy számot:</label>
+            <input type="number" id="number" placeholder="Pl: 17" min="1">
+        </div>
+
+        <button onclick="checkPrime()">Ellenőrzés</button>
+
+        <div id="result" class="result">
+            <div class="result-text" id="resultText"></div>
+        </div>
+    </div>
+
+    <script>
+        // Prímszámok generálása
+        function generatePrimes(limit) {
+            const primes = [];
+            for (let i = 2; i <= limit; i++) {
+                if (isPrime(i)) {
+                    primes.push(i);
+                }
+            }
+            return primes;
+        }
+
+        function isPrime(num) {
+            // 1 és alatti számok nem prímek
+            if (num <= 1) return false;
+            
+            // 2 prím
+            if (num === 2) return true;
+            
+            // Páros számok nem prímek
+            if (num % 2 === 0) return false;
+            
+            // 3-tól a szám négyzetgyökéig ellenőrizünk
+            for (let i = 3; i <= Math.sqrt(num); i += 2) {
+                if (num % i === 0) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+
+        // Háttér prímszámok generálása
+        function createPrimeBackground() {
+            const bg = document.getElementById('primeBackground');
+            const primes = generatePrimes(200); // 200-ig terjedő prímszámok
+            
+            // 80 random prímszám elhelyezése
+            for (let i = 0; i < 80; i++) {
+                const prime = primes[Math.floor(Math.random() * primes.length)];
+                
+                const primeSpan = document.createElement('span');
+                primeSpan.textContent = prime;
+                primeSpan.style.position = 'absolute';
+                primeSpan.style.left = Math.random() * 100 + '%';
+                primeSpan.style.top = Math.random() * 100 + '%';
+                primeSpan.style.fontSize = (Math.random() * 30 + 15) + 'px';
+                primeSpan.style.color = 'rgba(255, 255, 255, ' + (Math.random() * 0.3 + 0.1) + ')';
+                primeSpan.style.fontWeight = 'bold';
+                primeSpan.style.textShadow = '0 0 10px rgba(255, 255, 255, 0.5)';
+                primeSpan.style.userSelect = 'none';
+                primeSpan.style.pointerEvents = 'none';
+                primeSpan.style.animation = `float ${Math.random() * 20 + 15}s linear infinite`;
+                
+                bg.appendChild(primeSpan);
+            }
+        }
+
+        // Animáció hozzáadása
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0% {
+                    transform: translateY(0px) rotateZ(0deg);
+                    opacity: 0.1;
+                }
+                50% {
+                    opacity: 0.3;
+                }
+                100% {
+                    transform: translateY(-100vh) rotateZ(360deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        function checkPrime() {
+            const input = document.getElementById('number');
+            const resultDiv = document.getElementById('result');
+            const resultText = document.getElementById('resultText');
+            const number = parseInt(input.value);
+
+            // Validáció
+            if (input.value.trim() === '') {
+                resultDiv.className = 'result error';
+                resultText.textContent = 'Kérlek, adj meg egy számot!';
+                resultDiv.style.display = 'block';
+                return;
+            }
+
+            if (number <= 0) {
+                resultDiv.className = 'result error';
+                resultText.textContent = 'Csak pozitív egész számok megengedettek!';
+                resultDiv.style.display = 'block';
+                return;
+            }
+
+            // Prímszám ellenőrzése
+            if (isPrime(number)) {
+                resultDiv.className = 'result prime';
+                resultText.textContent = `✓ Az ${number} szám PRÍM!`;
+            } else {
+                resultDiv.className = 'result not-prime';
+                resultText.textContent = `✗ Az ${number} szám NEM PRÍM!`;
+            }
+
+            resultDiv.style.display = 'block';
+        }
+
+        // Enter billentyűvel is le lehessen futtatni az ellenőrzést
+        document.getElementById('number').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                checkPrime();
+            }
+        });
+
+        // Háttér inicializálása az oldal betöltésekor
+        window.addEventListener('load', createPrimeBackground);
+    </script>
+</body>
+</html>
