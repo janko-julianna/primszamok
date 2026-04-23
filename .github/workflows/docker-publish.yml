@@ -26,11 +26,11 @@ jobs:
     - uses: actions/checkout@v4
     - name: Build the Docker image
       run: |
-        docker build . --file Dockerfile --tag ghcr.io/janko-julianna/primszam:$IMAGE_TAG        
+        docker build . --file Dockerfile --tag ghcr.io/janko-julianna/primszamok:$IMAGE_TAG        
         docker login ghcr.io -u janko-julianna -p ${{ secrets.GHCR_PAT }}
-        docker push ghcr.io/janko-julianna/primszam:$IMAGE_TAG
+        docker push ghcr.io/janko-julianna/primszamok:$IMAGE_TAG
 
-        sed -i 's|image: ghcr.io/janko-julianna/primszam:.*|image: ghcr.io/janko-julianna/primszam:'"$IMAGE_TAG"'|' deployment.yaml
+        sed -i 's|image: ghcr.io/janko-julianna/primszamok:.*|image: ghcr.io/janko-julianna/primszamok:'"$IMAGE_TAG"'|' deployment.yaml
 
         git config --global user.name "janko-julianna"
         git config --global user.email "janko.julianna@jedlik.eu"
