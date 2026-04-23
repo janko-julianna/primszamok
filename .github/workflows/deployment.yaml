@@ -1,0 +1,64 @@
+# kubectl create secret docker-registry ghcr-auth-secret --docker-server=ghcr.io --docker-username=bognarpal --docker-password=<TOKEN>
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: primszam 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: primszam
+
+  template:
+    metadata:
+      labels:
+        app: primszam
+
+    spec:
+      containers:
+        - name: primszam-container
+          image: ghcr.io/janko-julianna/primszam:latest
+          ports:
+            - containerPort: 80
+      imagePullSecrets:
+        - name: ghcr-auth-secret
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: primszam-clusterip
+spec:
+  type: ClusterIP
+  selector:
+    app: primszam
+  ports: 
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: primszam-ingress
+  annotations:
+    # nginx.ingress.kubernetes.io/whitelist-source-range: 10.0.32.0/24, 193.225.219.140/32 
+    # nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+spec:
+  ingressClassName: nginx 
+
+  rules:
+    - host: primszam-janko-julianna.jcloud.jedlik.cloud
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: primszam-clusterip
+                port:
+                  number: 80  
