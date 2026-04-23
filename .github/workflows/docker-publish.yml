@@ -32,7 +32,7 @@ jobs:
 
         sed -i 's|image: ghcr.io/janko-julianna/primszam:.*|image: ghcr.io/janko-julianna/primszam:'"$IMAGE_TAG"'|' deployment.yaml
 
-        git config --global user.name "Jankó Julianna"
+        git config --global user.name "janko-julianna"
         git config --global user.email "janko.julianna@jedlik.eu"
         git add deployment.yaml
         git commit -m "update K8S deployment.yaml file"        
